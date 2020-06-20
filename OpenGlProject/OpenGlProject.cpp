@@ -302,4 +302,5 @@ int main(int argc, char** argv) {
 	MovePlayer(0);
 	glutMainLoop();
 	return 0;
+	printf("you are fat");
 }
