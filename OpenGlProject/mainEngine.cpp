@@ -43,6 +43,8 @@ struct Object objectArr[100];
 Object currentObject;
 ComTex comtex;
 ComTex commontextureArr[100];
+bool changeWaiting = false;
+void(*changefunc)(void);
 
 void init(void) {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -176,17 +178,6 @@ void display(void) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glBindTexture(GL_TEXTURE_2D, textureArr[0]);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0);
-	glVertex2f(-1, 1);
-	glTexCoord2f(1.0, 1.0);
-	glVertex2f(1, 1);
-	glTexCoord2f(1.0, 0.0);
-	glVertex2f(1, -1);
-	glTexCoord2f(0.0, 0.0);
-	glVertex2f(-1, -1);
-	glEnd();
 	for (int i = 0; i < objCount; i++) {
 		if (objectArr[i].name == "player") {
 			glBindTexture(GL_TEXTURE_2D, textureArr[objectArr[i].textureNo]);
@@ -216,6 +207,11 @@ void display(void) {
 		}
 	}
 	glFlush();
+	glutSwapBuffers();
+	if (changeWaiting) {
+		changeWaiting = false;
+		changefunc();
+	}
 }
 
 int playerIndex() {
@@ -226,6 +222,29 @@ int playerIndex() {
 	}
 }
 
+void ClearForChange() {
+	int donotdel;
+	for (int i = 0; i < objCount; i++) {
+		objectArr[i] = Object{};
+	}
+	for (int i = 0; i < comtexammount; i++) {
+		if (commontextureArr[i].name != "loading") {
+			commontextureArr[i] = ComTex{};
+		}
+		else {
+			donotdel = commontextureArr[i].texid;
+		}
+	}
+	for (int i = 0; i < texcount; i++) {
+		if (i != donotdel) {
+			textureArr[i] = GLuint{};
+		}
+	}
+	LoadObjectFromMem("loading", -1, 1, 1, -1, 1, 1, -1, -1, "loading");
+	glutPostRedisplay();
+	changeWaiting = true;
+}
+
 int main(int argc, char** argv) {
 	FreeConsole();
 	glutInit(&argc, argv);
@@ -234,9 +253,9 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("This 'game' has no title yet! :)");
 	init();
-	LoadMainScene();
 	glutDisplayFunc(display);
 	glutFullScreen();
+	LoadMenuScene();
 	timer(0);
 	MovePlayer(0);
 	glutMainLoop();

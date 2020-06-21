@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="mainEngine.cpp" />
     <ClCompile Include="maingamescene.cpp" />
+    <ClCompile Include="menuscreen.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
