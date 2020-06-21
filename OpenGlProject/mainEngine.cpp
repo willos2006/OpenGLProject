@@ -5,7 +5,7 @@
 #include <glut.h>
 #include "SOIL.h"
 #include <windows.h>
-#include "maingamescene.cpp"
+#include "funcs.h"
 using namespace std;
 
 float moveX = 0.0;
@@ -15,8 +15,6 @@ bool up = false;
 bool down = false;
 bool left = false;
 bool right = false;
-
-bool escapebackground = false;
 
 int pixelPerX = 1920 / 2;
 int pixelPerY = 1080 / 2;
@@ -133,51 +131,6 @@ void DeleteObject(const char* name, bool deltex) {
 	}
 }
 
-
-void KeyDownFuncs(unsigned char key, int x, int y) {
-	if (key == 'w') {
-		up = true;
-	}
-	if (key == 'a') {
-		left = true;
-	}
-	if (key == 's') {
-		down = true;
-	}
-	if (key == 'd') {
-		right = true;
-	}
-	if (key == 27) {
-		if (escapebackground == false) {
-			LoadObjectFromMem("escapebackground", -1, 1, 1, -1, 1, 1, -1, -1, "escapebackground");
-			LoadObjectFromMem("exitbtn", -0.125, 0.125, 0.125, -0.125, 0.15, 0.15, -0.15, -0.15, "exitbtn");
-			escapebackground = true;
-			glutPostRedisplay();
-		}
-		else {
-			DeleteObject("escapebackground", false);
-			DeleteObject("exitbtn", false);
-			escapebackground = false;
-			glutPostRedisplay();
-		}
-	}
-}
-
-void KeyUpFuncs(unsigned char key, int x, int y) {
-	if (key == 'w') {
-		up = false;
-	}
-	if (key == 'a') {
-		left = false;
-	}
-	if (key == 's') {
-		down = false;
-	}
-	if (key == 'd') {
-		right = false;
-	}
-}
-
 void MovePlayer(int) {
 	if (left && moveX > -0.88) {
 		moveX -= 0.03;
@@ -218,19 +171,7 @@ void LoadEscapeTex() {
 	escapetex = texture;
 }
 
-void MouseFunc(int button, int state, int xi, int yi) {
-	float x = ((float)xi / (float)pixelPerX) - 1.0f;
-	float y = (((float)yi / (float)pixelPerY) - 1.0f) * -1.0f;
-	if (button == 0 && state == 0 && buttonClicked(x, y, "exitbtn") && escapebackground) {
-		exit(0);
-	}
-}
-
-
 void display(void) {
-	glutMouseFunc(MouseFunc);
-	glutKeyboardFunc(KeyDownFuncs);
-	glutKeyboardUpFunc(KeyUpFuncs);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -293,10 +234,7 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("This 'game' has no title yet! :)");
 	init();
-	LoadImage("background.png");
-	LoadObjectAndTex("player1.png", -0.1, 0.1, 0.1, -0.1, 0.3, 0.3, -0.3, -0.3, "player");
-	LoadIntoMem("escapebackground.png", "escapebackground");
-	LoadIntoMem("exitbtn.png", "exitbtn");
+	LoadMainScene();
 	glutDisplayFunc(display);
 	glutFullScreen();
 	timer(0);
