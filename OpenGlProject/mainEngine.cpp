@@ -5,6 +5,7 @@
 #include <glut.h>
 #include "SOIL.h"
 #include <windows.h>
+#include "maingamescene.cpp"
 using namespace std;
 
 float moveX = 0.0;

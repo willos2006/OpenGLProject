@@ -23,7 +23,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OpenGlProject.cpp">
+    <ClCompile Include="mainEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="maingamescene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
