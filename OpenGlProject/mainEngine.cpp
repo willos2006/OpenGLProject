@@ -6,7 +6,6 @@
 #include "SOIL.h"
 #include <windows.h>
 #include "funcs.h"
-using namespace std;
 
 float moveX = 0.0;
 float moveY = 0.0;
@@ -102,6 +101,7 @@ void LoadIntoMem(const char* filename, const char* texname) {
 
 void timer(int) {
 	glutPostRedisplay();
+	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 	glutTimerFunc(1000 / 60, timer, 0);
 }
 

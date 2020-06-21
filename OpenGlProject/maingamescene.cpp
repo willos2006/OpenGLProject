@@ -6,7 +6,6 @@
 #include "SOIL.h"
 #include <windows.h>
 #include "funcs.h"
-using namespace std;
 
 namespace maingamescene {
 	bool escapebackground = false;
