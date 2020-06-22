@@ -26,3 +26,5 @@ extern int pixelPerX;
 extern int pixelPerY;
 extern void(*changefunc)(void);
 int GetObjIndexByName(const char* name);
+int GetTexIndex(const char* name);
+extern int objCount;

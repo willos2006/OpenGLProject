@@ -8,8 +8,10 @@
 #include "funcs.h"
 
 namespace maingamescene {
+
 	bool escapebackground = false;
 	bool escapebuttonover = false;
+	int turn = 0;
 
 	void MouseFunc(int button, int state, int xi, int yi) {
 		float x = ((float)xi / (float)pixelPerX) - 1.0f;
@@ -66,18 +68,28 @@ namespace maingamescene {
 	}
 
 	void KeyUpFuncs(unsigned char key, int x, int y) {
+		int playerIndex = GetObjIndexByName("player");
 		if (key == 'w') {
 			up = false;
+			objectArr[playerIndex].textureNo = GetTexIndex("player");
+			turn = 0;
 		}
 		if (key == 'a') {
 			left = false;
+			objectArr[playerIndex].textureNo = GetTexIndex("player");
+			turn = 0;
 		}
 		if (key == 's') {
 			down = false;
+			objectArr[playerIndex].textureNo = GetTexIndex("player");
+			turn = 0;
 		}
 		if (key == 'd') {
 			right = false;
+			objectArr[playerIndex].textureNo = GetTexIndex("player");
+			turn = 0;
 		}
+		glutPostRedisplay();
 	}
 
 	DWORD WINAPI userInputHandler(LPVOID lpParameter) {
@@ -89,6 +101,54 @@ namespace maingamescene {
 		userInputHandler(NULL);
 		return 0;
 	}
+	
+	DWORD WINAPI anims(LPVOID lpParameter) {
+		int playerIndex = GetObjIndexByName("player");
+		if (left) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("left1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("left2");
+				turn = 0;
+			}
+		}
+		if (right) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("right1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("right2");
+				turn = 0;
+			}
+		}
+		if (up) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("up1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("up2");
+				turn = 0;
+			}
+		}
+		if (down) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("down1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("down2");
+				turn = 0;
+			}
+		}
+		glutPostRedisplay();
+		Sleep(250);
+		anims(NULL);
+		return 0;
+	}
 }
 
 void LoadMainScene() {
@@ -96,7 +156,17 @@ void LoadMainScene() {
 	LoadObjectAndTex("background.png", -1, 1, 1, -1, 1, 1, -1, -1, "background");
 	LoadObjectAndTex("player1.png", -0.1, 0.1, 0.1, -0.1, 0.3, 0.3, -0.3, -0.3, "player");
 	LoadIntoMem("escapebackground.png", "escapebackground");
+	LoadIntoMem("player1.png", "player");
 	LoadIntoMem("exitbtn.png", "exitbtn");
+	LoadIntoMem("up1.png", "up1");
+	LoadIntoMem("up2.png", "up2");
+	LoadIntoMem("down1.png", "down1");
+	LoadIntoMem("down2.png", "down2");
+	LoadIntoMem("left1.png", "left1");
+	LoadIntoMem("left2.png", "left2"); 
+	LoadIntoMem("right1.png", "right1"); 
+	LoadIntoMem("right2.png", "right2"); 
 	DeleteObject("loading", true);
 	CreateThread(NULL, 0, maingamescene::userInputHandler, NULL, 0, 0);
+	CreateThread(NULL, 0, maingamescene::anims, NULL, 0, 0);
 }

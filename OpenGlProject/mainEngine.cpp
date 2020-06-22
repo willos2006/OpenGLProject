@@ -10,10 +10,10 @@
 float moveX = 0.0;
 float moveY = 0.0;
 
-bool up = false;
-bool down = false;
-bool left = false;
-bool right = false;
+bool up;
+bool down;
+bool left;
+bool right;
 
 int pixelPerX = 1920 / 2;
 int pixelPerY = 1080 / 2;
@@ -33,7 +33,7 @@ struct ComTex {
 
 struct Object objectArr[100];
 Object currentObject;
-ComTex comtex;
+struct ComTex comtex;
 ComTex commontextureArr[100];
 bool changeWaiting = false;
 void(*changefunc)(void);
@@ -47,6 +47,14 @@ int GetObjIndexByName(const char* name) {
 	for (int i = 0; i < objCount; i++) {
 		if (objectArr[i].name == name) {
 			return i;
+		}
+	}
+}
+
+int GetTexIndex(const char* name) {
+	for (int i = 0; i < comtexammount; i++) {
+		if (commontextureArr[i].name == name) {
+			return commontextureArr[i].texid;
 		}
 	}
 }
@@ -100,39 +108,31 @@ void timer(int) {
 
 void DeleteObject(const char* name, bool deltex) {
 	int startIndex = GetObjIndexByName(name);
-	if (startIndex != objCount) {
-		texcount -= 1;
-		objCount -= 1;
-		if (deltex) {
-			for (int i = objectArr[startIndex].textureNo; i <= texcount; i++) {
-				textureArr[i] = textureArr[i + 1];
-				for (int x = 0; x < comtexammount; x++) {
-					if (commontextureArr[x].texid == i) {
-						commontextureArr[x].texid--;
-					}
+	texcount -= 1;
+	objCount -= 1;
+	if (deltex) {
+		for (int i = objectArr[startIndex].textureNo; i <= texcount; i++) {
+			textureArr[i] = textureArr[i + 1];
+			for (int x = 0; x < comtexammount; x++) {
+				if (commontextureArr[x].texid == i) {
+					commontextureArr[x].texid--;
 				}
 			}
 		}
-		for (int i = startIndex; i <= objCount; i++) {
-			objectArr[i] = objectArr[i + 1];
-			objectArr[i].textureNo -= 1;
-		}
 	}
-	else {
-		objectArr[startIndex] = Object{};
-		textureArr[objectArr[startIndex].textureNo] = GLuint{};
-		objCount--;
-		texcount--;
+	for (int i = startIndex; i <= objCount; i++) {
+		objectArr[i] = objectArr[i + 1];
+		objectArr[i].textureNo -= 1;
 	}
 }
 
 void MovePlayer(int) {
 	if (left && moveX > -0.88) {
-		moveX -= 0.03;
+		moveX -= 0.02;
 		glutPostRedisplay();
 	}
 	if (right && moveX < 0.88) {
-		moveX += 0.03;
+		moveX += 0.02;
 		glutPostRedisplay();
 	}
 	if (up && moveY < 0.68) {
@@ -324,10 +324,12 @@ void ClearForChange() {
 	int donotdel;
 	for (int i = 0; i < objCount; i++) {
 		objectArr[i] = Object{};
+		objCount--;
 	}
 	for (int i = 0; i < comtexammount; i++) {
 		if (commontextureArr[i].name != "loading") {
 			commontextureArr[i] = ComTex{};
+			comtexammount--;
 		}
 		else {
 			donotdel = commontextureArr[i].texid;
@@ -336,6 +338,7 @@ void ClearForChange() {
 	for (int i = 0; i < texcount; i++) {
 		if (i != donotdel) {
 			textureArr[i] = GLuint{};
+			texcount--;
 		}
 	}
 	LoadObjectFromMem("loading", -1, 1, 1, -1, 1, 1, -1, -1, "loading");
