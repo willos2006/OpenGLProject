@@ -26,13 +26,6 @@ GLuint escapetex;
 int texcount = 0;
 int comtexammount = 0;
 
-struct Object {
-	float x1; float x2; float x3; float x4;
-	float y1; float y2; float y3; float y4;
-	int textureNo;
-	const char* name;
-};
-
 struct ComTex {
 	const char* name;
 	int texid;
@@ -222,6 +215,111 @@ int playerIndex() {
 	}
 }
 
+void ButtonBigger(int index, float amount) {
+	if (objectArr[index].x1 < 0.0f) {
+		objectArr[index].x1 -= amount;
+	}
+	else {
+		objectArr[index].x1 += amount;
+	}
+	if (objectArr[index].x2 < 0.0f) {
+		objectArr[index].x2 -= amount;
+	}
+	else {
+		objectArr[index].x2 += amount;
+	}
+	if (objectArr[index].x3 < 0.0f) {
+		objectArr[index].x3 -= amount;
+	}
+	else {
+		objectArr[index].x3 += amount;
+	}
+	if (objectArr[index].x4 < 0.0f) {
+		objectArr[index].x4 -= amount;
+	}
+	else {
+		objectArr[index].x4 += amount;
+	}
+	if (objectArr[index].y1 < 0.0f) {
+		objectArr[index].y1 -= amount;
+	}
+	else {
+		objectArr[index].y1 += amount;
+	}
+	if (objectArr[index].y2 < 0.0f) {
+		objectArr[index].y2 -= amount;
+	}
+	else {
+		objectArr[index].y2 += amount;
+	}
+	if (objectArr[index].y3 < 0.0f) {
+		objectArr[index].y3 -= amount;
+	}
+	else {
+		objectArr[index].y3 += amount;
+	}
+	if (objectArr[index].y4 < 0.0f) {
+		objectArr[index].y4 -= amount;
+	}
+	else {
+		objectArr[index].y4 += amount;
+	}
+	glutPostRedisplay();
+}
+
+void ButtonSmaller(int index, float amount) {
+	if (objectArr[index].x1 < 0.0f) {
+		objectArr[index].x1 += amount;
+	}
+	else {
+		objectArr[index].x1 -= amount;
+	}
+	if (objectArr[index].x2 < 0.0f) {
+		objectArr[index].x2 += amount;
+	}
+	else {
+		objectArr[index].x2 -= amount;
+	}
+	if (objectArr[index].x3 < 0.0f) {
+		objectArr[index].x3 += amount;
+	}
+	else {
+		objectArr[index].x3 -= amount;
+	}
+	if (objectArr[index].x4 < 0.0f) {
+		objectArr[index].x4 += amount;
+	}
+	else {
+		objectArr[index].x4 -= amount;
+	}
+	if (objectArr[index].y1 < 0.0f) {
+		objectArr[index].y1 += amount;
+	}
+	else {
+		objectArr[index].y1 -= amount;
+	}
+	if (objectArr[index].y2 < 0.0f) {
+		objectArr[index].y2 += amount;
+	}
+	else {
+		objectArr[index].y2 -= amount;
+	}
+	if (objectArr[index].y3 < 0.0f) {
+		objectArr[index].y3 += amount;
+	}
+	else {
+		objectArr[index].y3 -= amount;
+	}
+	if (objectArr[index].y4 < 0.0f) {
+		objectArr[index].y4 += amount;
+	}
+	else {
+		objectArr[index].y4 -= amount;
+	}
+	glutPostRedisplay();
+}
+
+
 void ClearForChange() {
 	int donotdel;
 	for (int i = 0; i < objCount; i++) {
@@ -246,7 +344,6 @@ void ClearForChange() {
 }
 
 int main(int argc, char** argv) {
-	FreeConsole();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowSize(1920, 1080);

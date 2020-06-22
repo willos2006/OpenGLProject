@@ -9,6 +9,7 @@
 
 namespace maingamescene {
 	bool escapebackground = false;
+	bool escapebuttonover = false;
 
 	void MouseFunc(int button, int state, int xi, int yi) {
 		float x = ((float)xi / (float)pixelPerX) - 1.0f;
@@ -18,18 +19,35 @@ namespace maingamescene {
 		}
 	}
 
+	void MouseMove(int xi, int yi) {
+		float x = ((float)xi / (float)pixelPerX) - 1.0f;
+		float y = (((float)yi / (float)pixelPerY) - 1.0f) * -1.0f;
+		if (buttonClicked(x, y, "exitbtn") && escapebuttonover == false) {
+			int exitBtnIndex = GetObjIndexByName("exitbtn");
+			ButtonBigger(exitBtnIndex, 0.05f);
+			glutPostRedisplay();
+			escapebuttonover = true;
+		}
+		if(escapebuttonover && !buttonClicked(x, y, "exitbtn")){
+			ButtonSmaller(GetObjIndexByName("exitbtn"), 0.05f);
+			escapebuttonover = false;
+		}
+	}
+
 	void KeyDownFuncs(unsigned char key, int x, int y) {
-		if (key == 'w') {
-			up = true;
-		}
-		if (key == 'a') {
-			left = true;
-		}
-		if (key == 's') {
-			down = true;
-		}
-		if (key == 'd') {
-			right = true;
+		if (!escapebackground) {
+			if (key == 'w') {
+				up = true;
+			}
+			if (key == 'a') {
+				left = true;
+			}
+			if (key == 's') {
+				down = true;
+			}
+			if (key == 'd') {
+				right = true;
+			}
 		}
 		if (key == 27) {
 			if (escapebackground == false) {
@@ -64,6 +82,7 @@ namespace maingamescene {
 
 	DWORD WINAPI userInputHandler(LPVOID lpParameter) {
 		glutMouseFunc(MouseFunc);
+		glutPassiveMotionFunc(MouseMove);
 		glutKeyboardUpFunc(KeyUpFuncs);
 		glutKeyboardFunc(KeyDownFuncs);
 		Sleep(20);
