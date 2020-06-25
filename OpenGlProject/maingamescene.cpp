@@ -104,27 +104,7 @@ namespace maingamescene {
 	
 	DWORD WINAPI anims(LPVOID lpParameter) {
 		int playerIndex = GetObjIndexByName("player");
-		if (left) {
-			if (turn == 0) {
-				objectArr[playerIndex].textureNo = GetTexIndex("left1");
-				turn = 1;
-			}
-			else {
-				objectArr[playerIndex].textureNo = GetTexIndex("left2");
-				turn = 0;
-			}
-		}
-		if (right) {
-			if (turn == 0) {
-				objectArr[playerIndex].textureNo = GetTexIndex("right1");
-				turn = 1;
-			}
-			else {
-				objectArr[playerIndex].textureNo = GetTexIndex("right2");
-				turn = 0;
-			}
-		}
-		if (up) {
+		if (right && up || left && up) {
 			if (turn == 0) {
 				objectArr[playerIndex].textureNo = GetTexIndex("up1");
 				turn = 1;
@@ -134,7 +114,48 @@ namespace maingamescene {
 				turn = 0;
 			}
 		}
-		if (down) {
+		else if (left && down || right && down) {
+
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("down1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("down2");
+				turn = 0;
+			}
+		}
+		else if (left) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("left1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("left2");
+				turn = 0;
+			}
+		}
+		else if (right) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("right1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("right2");
+				turn = 0;
+			}
+		}
+		else if (up) {
+			if (turn == 0) {
+				objectArr[playerIndex].textureNo = GetTexIndex("up1");
+				turn = 1;
+			}
+			else {
+				objectArr[playerIndex].textureNo = GetTexIndex("up2");
+				turn = 0;
+			}
+		}
+		else if (down) {
 			if (turn == 0) {
 				objectArr[playerIndex].textureNo = GetTexIndex("down1");
 				turn = 1;
@@ -145,7 +166,7 @@ namespace maingamescene {
 			}
 		}
 		glutPostRedisplay();
-		Sleep(250);
+		Sleep(200);
 		anims(NULL);
 		return 0;
 	}
@@ -154,7 +175,7 @@ namespace maingamescene {
 void LoadMainScene() {
 	glutPostOverlayRedisplay();
 	LoadObjectAndTex("background.png", -1, 1, 1, -1, 1, 1, -1, -1, "background");
-	LoadObjectAndTex("player1.png", -0.1, 0.1, 0.1, -0.1, 0.3, 0.3, -0.3, -0.3, "player");
+	LoadObjectAndTex("player1.png", -0.085, 0.085, 0.085, -0.085, 0.255, 0.255, -0.255, -0.255, "player");
 	LoadIntoMem("escapebackground.png", "escapebackground");
 	LoadIntoMem("player1.png", "player");
 	LoadIntoMem("exitbtn.png", "exitbtn");
