@@ -15,6 +15,8 @@ bool down;
 bool left;
 bool right;
 
+bool canmove = true;
+
 int pixelPerX = 1920 / 2;
 int pixelPerY = 1080 / 2;
 
@@ -31,8 +33,17 @@ struct ComTex {
 	int texid;
 };
 
+struct HitBox {
+	float x1; float x2; float x3; float x4;
+	float y1; float y2; float y3; float y4;
+	const char* name;
+};
+
+struct HitBox hitboxArr[100];
+
 struct Object objectArr[100];
 Object currentObject;
+int hitboxcount = 0;
 struct ComTex comtex;
 ComTex commontextureArr[100];
 bool changeWaiting = false;
@@ -70,17 +81,23 @@ void LoadImage(const char* filename) {
 	texcount++;
 }
 
-void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name) {
+void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size) {
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
 	currentObject.textureNo = texcount;
 	objectArr[objCount] = currentObject;
+	if (hitbox) {
+		hitboxArr[hitboxcount].x1 = x1 + size; hitboxArr[hitboxcount].x2 = x2 + size; hitboxArr[hitboxcount].x3 = x3 + size; hitboxArr[hitboxcount].x4 = x4 + size;
+		hitboxArr[hitboxcount].y1 = y1 + size; hitboxArr[hitboxcount].y2 = y2 + size; hitboxArr[hitboxcount].y3 = y3 + size; hitboxArr[hitboxcount].y4 = y4 + size;
+		hitboxArr[hitboxcount].name = name;
+		hitboxcount++;
+	}
 	objCount++;
 	LoadImage(filename);
 }
 
-void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name) {
+void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size) {
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
@@ -88,6 +105,12 @@ void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float 
 		if (commontextureArr[i].name == texname) {
 			currentObject.textureNo = commontextureArr[i].texid;
 		}
+	}
+	if (hitbox) {
+		hitboxArr[hitboxcount].x1 = x1 + size; hitboxArr[hitboxcount].x2 = x2 + size; hitboxArr[hitboxcount].x3 = x3 + size; hitboxArr[hitboxcount].x4 = x4 + size;
+		hitboxArr[hitboxcount].y1 = y1 + size; hitboxArr[hitboxcount].y2 = y2 + size; hitboxArr[hitboxcount].y3 = y3 + size; hitboxArr[hitboxcount].y4 = y4 + size;
+		hitboxArr[hitboxcount].name = name;
+		hitboxcount++;
 	}
 	objectArr[objCount] = currentObject;
 	objCount++;
@@ -124,26 +147,21 @@ void DeleteObject(const char* name, bool deltex) {
 		objectArr[i] = objectArr[i + 1];
 		objectArr[i].textureNo -= 1;
 	}
-}
-
-void MovePlayer(int) {
-	if (left && moveX > -0.88) {
-		moveX -= 0.02;
-		glutPostRedisplay();
+	int hitboxNo;
+	int ishitbox = false;
+	for (int i = 0; i < hitboxcount; i++) {
+		if (hitboxArr[i].name == name) {
+			hitboxNo = i;
+			break;
+			hitboxcount--;
+			ishitbox = true;
+		}
 	}
-	if (right && moveX < 0.88) {
-		moveX += 0.02;
-		glutPostRedisplay();
+	if (ishitbox) {
+		for (int i = hitboxNo; i < hitboxcount; i++) {
+			hitboxArr[i] = hitboxArr[i + 1];
+		}
 	}
-	if (up && moveY < 0.68) {
-		moveY += 0.03;
-		glutPostRedisplay();
-	}
-	if (down && moveY > -0.6) {
-		moveY -= 0.03;
-		glutPostRedisplay();
-	}
-	glutTimerFunc(20, MovePlayer, 0);
 }
 
 bool buttonClicked(float x, float y, const char* btnName) {
@@ -172,32 +190,17 @@ void display(void) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (int i = 0; i < objCount; i++) {
-		if (objectArr[i].name == "player") {
-			glBindTexture(GL_TEXTURE_2D, textureArr[objectArr[i].textureNo]);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0);
-			glVertex2f(objectArr[i].x1 + moveX, objectArr[i].y1 + moveY);
-			glTexCoord2f(1.0, 1.0);
-			glVertex2f(objectArr[i].x2 + moveX, objectArr[i].y2 + moveY);
-			glTexCoord2f(1.0, 0.0);
-			glVertex2f(objectArr[i].x3 + moveX, objectArr[i].y3 + moveY);
-			glTexCoord2f(0.0, 0.0);
-			glVertex2f(objectArr[i].x4 + moveX, objectArr[i].y4 + moveY);
-			glEnd();
-		}
-		else {
-			glBindTexture(GL_TEXTURE_2D, textureArr[objectArr[i].textureNo]);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0);
-			glVertex2f(objectArr[i].x1, objectArr[i].y1);
-			glTexCoord2f(1.0, 1.0);
-			glVertex2f(objectArr[i].x2, objectArr[i].y2);
-			glTexCoord2f(1.0, 0.0);
-			glVertex2f(objectArr[i].x3, objectArr[i].y3);
-			glTexCoord2f(0.0, 0.0);
-			glVertex2f(objectArr[i].x4, objectArr[i].y4);
-			glEnd();
-		}
+		glBindTexture(GL_TEXTURE_2D, textureArr[objectArr[i].textureNo]);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 1.0);
+		glVertex2f(objectArr[i].x1, objectArr[i].y1);
+		glTexCoord2f(1.0, 1.0);
+		glVertex2f(objectArr[i].x2, objectArr[i].y2);
+		glTexCoord2f(1.0, 0.0);
+		glVertex2f(objectArr[i].x3, objectArr[i].y3);
+		glTexCoord2f(0.0, 0.0);
+		glVertex2f(objectArr[i].x4, objectArr[i].y4);
+		glEnd();
 	}
 	glFlush();
 	glutSwapBuffers();
@@ -261,7 +264,7 @@ void ClearForChange() {
 			texcount--;
 		}
 	}
-	LoadObjectFromMem("loading", -1, 1, 1, -1, 1, 1, -1, -1, "loading");
+	LoadObjectFromMem("loading", -1, 1, 1, -1, 1, 1, -1, -1, "loading", false);
 	glutPostRedisplay();
 	changeWaiting = true;
 }
@@ -277,7 +280,6 @@ int main(int argc, char** argv) {
 	glutFullScreen();
 	LoadMenuScene();
 	timer(0);
-	MovePlayer(0);
 	glutMainLoop();
 	return 0;
 }

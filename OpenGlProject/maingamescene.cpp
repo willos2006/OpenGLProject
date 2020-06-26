@@ -53,8 +53,8 @@ namespace maingamescene {
 		}
 		if (key == 27) {
 			if (escapebackground == false) {
-				LoadObjectFromMem("escapebackground", -1, 1, 1, -1, 1, 1, -1, -1, "escapebackground");
-				LoadObjectFromMem("exitbtn", -0.125, 0.125, 0.125, -0.125, 0.15, 0.15, -0.15, -0.15, "exitbtn");
+				LoadObjectFromMem("escapebackground", -1, 1, 1, -1, 1, 1, -1, -1, "escapebackground", false);
+				LoadObjectFromMem("exitbtn", -0.125, 0.125, 0.125, -0.125, 0.15, 0.15, -0.15, -0.15, "exitbtn", false);
 				escapebackground = true;
 				glutPostRedisplay();
 			}
@@ -170,12 +170,43 @@ namespace maingamescene {
 		anims(NULL);
 		return 0;
 	}
+	void MovePlayer(int) {
+		if (canmove) {
+			int playerIndex = GetObjIndexByName("player");
+			if (left && objectArr[playerIndex].x1 > -1.0f) {
+				objectArr[playerIndex].x1 -= 0.02;
+				objectArr[playerIndex].x2 -= 0.02;
+				objectArr[playerIndex].x3 -= 0.02;
+				objectArr[playerIndex].x4 -= 0.02;
+			}
+			if (right && objectArr[playerIndex].x2 < 1.0f) {
+				objectArr[playerIndex].x1 += 0.02;
+				objectArr[playerIndex].x2 += 0.02;
+				objectArr[playerIndex].x3 += 0.02;
+				objectArr[playerIndex].x4 += 0.02;
+			}
+			if (up && objectArr[playerIndex].y1 < 1.0f) {
+				objectArr[playerIndex].y1 += 0.02;
+				objectArr[playerIndex].y2 += 0.02;
+				objectArr[playerIndex].y3 += 0.02;
+				objectArr[playerIndex].y4 += 0.02;
+			}
+			if (down && objectArr[playerIndex].y3 > -1.0f) {
+				objectArr[playerIndex].y1 -= 0.02;
+				objectArr[playerIndex].y2 -= 0.02;
+				objectArr[playerIndex].y3 -= 0.02;
+				objectArr[playerIndex].y4 -= 0.02;
+			}
+		}
+		glutTimerFunc(20, MovePlayer, 0);
+	}
+
 }
 
 void LoadMainScene() {
 	glutPostOverlayRedisplay();
-	LoadObjectAndTex("background.png", -1, 1, 1, -1, 1, 1, -1, -1, "background");
-	LoadObjectAndTex("player1.png", -0.085, 0.085, 0.085, -0.085, 0.255, 0.255, -0.255, -0.255, "player");
+	LoadObjectAndTex("background.png", -1, 1, 1, -1, 1, 1, -1, -1, "background", false);
+	LoadObjectAndTex("player1.png", -0.085, 0.085, 0.085, -0.085, 0.255, 0.255, -0.255, -0.255, "player", true, 0.0f);
 	LoadIntoMem("escapebackground.png", "escapebackground");
 	LoadIntoMem("player1.png", "player");
 	LoadIntoMem("exitbtn.png", "exitbtn");
@@ -190,4 +221,5 @@ void LoadMainScene() {
 	DeleteObject("loading", true);
 	CreateThread(NULL, 0, maingamescene::userInputHandler, NULL, 0, 0);
 	CreateThread(NULL, 0, maingamescene::anims, NULL, 0, 0);
+	maingamescene::MovePlayer(0);
 }
