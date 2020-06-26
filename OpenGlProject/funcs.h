@@ -7,6 +7,13 @@ extern struct Object {
 	int textureNo;
 	const char* name;
 };
+
+extern struct HitBox {
+	float x1; float x2; float x3; float x4;
+	float y1; float y2; float y3; float y4;
+	const char* name;
+};
+extern struct HitBox hitboxArr[100];
 void ButtonBigger(int index, float amount);
 void ButtonSmaller(int index, float amount);
 extern struct Object objectArr[100];
@@ -22,6 +29,8 @@ extern bool up;
 extern bool down;
 extern bool left;
 extern bool right;
+extern int hitboxcount;
+extern bool IsColliding(const char* hitbox1, const char* hitbox2);
 extern int pixelPerX;
 extern int pixelPerY;
 extern bool canmove;

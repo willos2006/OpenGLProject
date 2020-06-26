@@ -33,12 +33,6 @@ struct ComTex {
 	int texid;
 };
 
-struct HitBox {
-	float x1; float x2; float x3; float x4;
-	float y1; float y2; float y3; float y4;
-	const char* name;
-};
-
 struct HitBox hitboxArr[100];
 
 struct Object objectArr[100];
@@ -242,6 +236,40 @@ void ButtonSmaller(int index, float amount) {
 	glutPostRedisplay();
 }
 
+bool IsColliding(const char* hitbox1, const char* hitbox2) {
+	int obj1Index;
+	for (int i = 0; i < hitboxcount; i++) {
+		if (hitboxArr[i].name == hitbox1) {
+			obj1Index = i;
+			break;
+		}
+	}
+	int obj2Index;
+	for (int i = 0; i < hitboxcount; i++) {
+		if (hitboxArr[i].name == hitbox2) {
+			obj2Index = i;
+			break;
+		}
+	}
+	if (hitboxArr[obj1Index].x1 > hitboxArr[obj2Index].x1 && hitboxArr[obj1Index].x1 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y1 < hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y1 > hitboxArr[obj2Index].y3) {
+		return true;
+	}
+	else if (hitboxArr[obj1Index].x2 >   hitboxArr[obj2Index].x1 &&  hitboxArr[obj1Index].x2 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y1 < hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y1 > hitboxArr[obj2Index].y3) {
+		return true;
+	}
+	else if (hitboxArr[obj1Index].x1 > hitboxArr[obj2Index].x1 &&  hitboxArr[obj1Index].x1 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y3 < hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y3 > hitboxArr[obj2Index].y3) {
+		return true;
+	}
+	else if (hitboxArr[obj1Index].x2 > hitboxArr[obj2Index].x1 &&  hitboxArr[obj1Index].x2 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y3 < hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y3 > hitboxArr[obj2Index].y3) {
+		return true;
+	}
+	else if (hitboxArr[obj1Index].x1 > hitboxArr[obj2Index].x1 && hitboxArr[obj1Index].x1 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y1 > hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y3 < hitboxArr[obj2Index].y3) {
+		return true;
+	}
+	else if (hitboxArr[obj1Index].x2 > hitboxArr[obj2Index].x1 &&  hitboxArr[obj1Index].x2 < hitboxArr[obj2Index].x2  && hitboxArr[obj1Index].y1 > hitboxArr[obj2Index].y1 && hitboxArr[obj1Index].y3 < hitboxArr[obj2Index].y3) {
+		return true;
+	}
+}
 
 void ClearForChange() {
 	int donotdel;

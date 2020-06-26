@@ -104,24 +104,24 @@ namespace maingamescene {
 	
 	DWORD WINAPI anims(LPVOID lpParameter) {
 		int playerIndex = GetObjIndexByName("player");
-		if (right && up || left && up) {
+		if (right && up || right && down) {
 			if (turn == 0) {
-				objectArr[playerIndex].textureNo = GetTexIndex("up1");
+				objectArr[playerIndex].textureNo = GetTexIndex("right1");
 				turn = 1;
 			}
 			else {
-				objectArr[playerIndex].textureNo = GetTexIndex("up2");
+				objectArr[playerIndex].textureNo = GetTexIndex("right2");
 				turn = 0;
 			}
 		}
-		else if (left && down || right && down) {
+		else if (left && up || left && down) {
 
 			if (turn == 0) {
-				objectArr[playerIndex].textureNo = GetTexIndex("down1");
+				objectArr[playerIndex].textureNo = GetTexIndex("left1");
 				turn = 1;
 			}
 			else {
-				objectArr[playerIndex].textureNo = GetTexIndex("down2");
+				objectArr[playerIndex].textureNo = GetTexIndex("left2");
 				turn = 0;
 			}
 		}
@@ -173,29 +173,51 @@ namespace maingamescene {
 	void MovePlayer(int) {
 		if (canmove) {
 			int playerIndex = GetObjIndexByName("player");
+			int playerIndexHitbox;
+			for (int i = 0; i < hitboxcount; i++) {
+				if (hitboxArr[i].name == "player") {
+					playerIndexHitbox = i;
+				}
+			}
 			if (left && objectArr[playerIndex].x1 > -1.0f) {
 				objectArr[playerIndex].x1 -= 0.02;
 				objectArr[playerIndex].x2 -= 0.02;
 				objectArr[playerIndex].x3 -= 0.02;
 				objectArr[playerIndex].x4 -= 0.02;
+				hitboxArr[playerIndexHitbox].x1 -= 0.02;
+				hitboxArr[playerIndexHitbox].x2 -= 0.02;
+				hitboxArr[playerIndexHitbox].x3 -= 0.02;
+				hitboxArr[playerIndexHitbox].x4 -= 0.02;
 			}
 			if (right && objectArr[playerIndex].x2 < 1.0f) {
 				objectArr[playerIndex].x1 += 0.02;
 				objectArr[playerIndex].x2 += 0.02;
 				objectArr[playerIndex].x3 += 0.02;
 				objectArr[playerIndex].x4 += 0.02;
+				hitboxArr[playerIndexHitbox].x1 += 0.02;
+				hitboxArr[playerIndexHitbox].x2 += 0.02;
+				hitboxArr[playerIndexHitbox].x3 += 0.02;
+				hitboxArr[playerIndexHitbox].x4 += 0.02;
 			}
 			if (up && objectArr[playerIndex].y1 < 1.0f) {
 				objectArr[playerIndex].y1 += 0.02;
 				objectArr[playerIndex].y2 += 0.02;
 				objectArr[playerIndex].y3 += 0.02;
 				objectArr[playerIndex].y4 += 0.02;
+				hitboxArr[playerIndexHitbox].y1 += 0.02;
+				hitboxArr[playerIndexHitbox].y2 += 0.02;
+				hitboxArr[playerIndexHitbox].y3 += 0.02;
+				hitboxArr[playerIndexHitbox].y4 += 0.02;
 			}
 			if (down && objectArr[playerIndex].y3 > -1.0f) {
 				objectArr[playerIndex].y1 -= 0.02;
 				objectArr[playerIndex].y2 -= 0.02;
 				objectArr[playerIndex].y3 -= 0.02;
 				objectArr[playerIndex].y4 -= 0.02;
+				hitboxArr[playerIndexHitbox].y1 -= 0.02;
+				hitboxArr[playerIndexHitbox].y2 -= 0.02;
+				hitboxArr[playerIndexHitbox].y3 -= 0.02;
+				hitboxArr[playerIndexHitbox].y4 -= 0.02;
 			}
 		}
 		glutTimerFunc(20, MovePlayer, 0);
