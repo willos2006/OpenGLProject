@@ -12,6 +12,10 @@ namespace maingamescene {
 	bool escapebackground = false;
 	bool escapebuttonover = false;
 	int turn = 0;
+	bool leftcol = false;
+	bool rightcol = false;
+	bool upcol = false;
+	bool downcol = false;
 
 	void MouseFunc(int button, int state, int xi, int yi) {
 		float x = ((float)xi / (float)pixelPerX) - 1.0f;
@@ -170,6 +174,31 @@ namespace maingamescene {
 		anims(NULL);
 		return 0;
 	}
+
+	bool CheckIfCollideStop() {
+		int collideNo = 0;
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
+				if (IsColliding("player", hitboxArr[i].name)) {
+					collideNo++;
+				}
+			}
+		}
+		if (collideNo > 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	void NoCollisions() {
+		upcol = false;
+		downcol = false;
+		leftcol = false;
+		rightcol = false;
+	}
+
 	void MovePlayer(int) {
 		if (canmove) {
 			int playerIndex = GetObjIndexByName("player");
@@ -179,7 +208,21 @@ namespace maingamescene {
 					playerIndexHitbox = i;
 				}
 			}
-			if (left && objectArr[playerIndex].x1 > -1.0f) {
+			if (left && objectArr[playerIndex].x1 > -1.0f && !leftcol) {
+				if (CheckIfCollideStop() && !upcol && !downcol) {
+					objectArr[playerIndex].x1 += 0.02;
+					objectArr[playerIndex].x2 += 0.02;
+					objectArr[playerIndex].x3 += 0.02;
+					objectArr[playerIndex].x4 += 0.02;
+					hitboxArr[playerIndexHitbox].x1 += 0.02;
+					hitboxArr[playerIndexHitbox].x2 += 0.02;
+					hitboxArr[playerIndexHitbox].x3 += 0.02;
+					hitboxArr[playerIndexHitbox].x4 += 0.02;
+					leftcol = true;
+				}
+				else {
+					rightcol = false;
+				}
 				objectArr[playerIndex].x1 -= 0.02;
 				objectArr[playerIndex].x2 -= 0.02;
 				objectArr[playerIndex].x3 -= 0.02;
@@ -189,7 +232,21 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].x3 -= 0.02;
 				hitboxArr[playerIndexHitbox].x4 -= 0.02;
 			}
-			if (right && objectArr[playerIndex].x2 < 1.0f) {
+			if (right && objectArr[playerIndex].x2 < 1.0f && !rightcol) {
+				if (CheckIfCollideStop() && !upcol && !downcol) {
+					objectArr[playerIndex].x1 -= 0.02;
+					objectArr[playerIndex].x2 -= 0.02;
+					objectArr[playerIndex].x3 -= 0.02;
+					objectArr[playerIndex].x4 -= 0.02;
+					hitboxArr[playerIndexHitbox].x1 -= 0.02;
+					hitboxArr[playerIndexHitbox].x2 -= 0.02;
+					hitboxArr[playerIndexHitbox].x3 -= 0.02;
+					hitboxArr[playerIndexHitbox].x4 -= 0.02;
+					rightcol = true;
+				}
+				else {
+					leftcol = false;
+				}
 				objectArr[playerIndex].x1 += 0.02;
 				objectArr[playerIndex].x2 += 0.02;
 				objectArr[playerIndex].x3 += 0.02;
@@ -199,7 +256,21 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].x3 += 0.02;
 				hitboxArr[playerIndexHitbox].x4 += 0.02;
 			}
-			if (up && objectArr[playerIndex].y1 < 1.0f) {
+			if (up && objectArr[playerIndex].y1 < 1.0f && !upcol) {
+				if (CheckIfCollideStop() && !leftcol && !rightcol) {
+					objectArr[playerIndex].y1 -= 0.02;
+					objectArr[playerIndex].y2 -= 0.02;
+					objectArr[playerIndex].y3 -= 0.02;
+					objectArr[playerIndex].y4 -= 0.02;
+					hitboxArr[playerIndexHitbox].y1 -= 0.02;
+					hitboxArr[playerIndexHitbox].y2 -= 0.02;
+					hitboxArr[playerIndexHitbox].y3 -= 0.02;
+					hitboxArr[playerIndexHitbox].y4 -= 0.02;
+					upcol = true;
+				}
+				else {
+					downcol = false;
+				}
 				objectArr[playerIndex].y1 += 0.02;
 				objectArr[playerIndex].y2 += 0.02;
 				objectArr[playerIndex].y3 += 0.02;
@@ -209,7 +280,22 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].y3 += 0.02;
 				hitboxArr[playerIndexHitbox].y4 += 0.02;
 			}
-			if (down && objectArr[playerIndex].y3 > -1.0f) {
+			if (down && objectArr[playerIndex].y3 > -1.0f && !downcol) {
+				if (CheckIfCollideStop() && !leftcol && !rightcol) {
+					printf("left: %i, right: %i", leftcol, rightcol);
+					objectArr[playerIndex].y1 += 0.02;
+					objectArr[playerIndex].y2 += 0.02;
+					objectArr[playerIndex].y3 += 0.02;
+					objectArr[playerIndex].y4 += 0.02;
+					hitboxArr[playerIndexHitbox].y1 += 0.02;
+					hitboxArr[playerIndexHitbox].y2 += 0.02;
+					hitboxArr[playerIndexHitbox].y3 += 0.02;
+					hitboxArr[playerIndexHitbox].y4 += 0.02;
+					downcol = true;
+				}
+				else {
+					upcol = false;
+				}
 				objectArr[playerIndex].y1 -= 0.02;
 				objectArr[playerIndex].y2 -= 0.02;
 				objectArr[playerIndex].y3 -= 0.02;
@@ -219,16 +305,19 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].y3 -= 0.02;
 				hitboxArr[playerIndexHitbox].y4 -= 0.02;
 			}
+			if (!CheckIfCollideStop()) {
+				NoCollisions();
+			}
 		}
 		glutTimerFunc(20, MovePlayer, 0);
 	}
-
 }
 
 void LoadMainScene() {
 	glutPostOverlayRedisplay();
 	LoadObjectAndTex("background.png", -1, 1, 1, -1, 1, 1, -1, -1, "background", false);
 	LoadObjectAndTex("player1.png", -0.085, 0.085, 0.085, -0.085, 0.255, 0.255, -0.255, -0.255, "player", true, 0.0f);
+	LoadObjectAndTex("button.png", 0.175, 0.425, 0.425, 0.175, 0.15, 0.15, -0.15, -0.15, "testcol", true, 0.0f);
 	LoadIntoMem("escapebackground.png", "escapebackground");
 	LoadIntoMem("player1.png", "player");
 	LoadIntoMem("exitbtn.png", "exitbtn");

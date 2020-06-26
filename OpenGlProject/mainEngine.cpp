@@ -75,7 +75,7 @@ void LoadImage(const char* filename) {
 	texcount++;
 }
 
-void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size) {
+void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size, bool isSolid) {
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
@@ -85,13 +85,14 @@ void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float 
 		hitboxArr[hitboxcount].x1 = x1 + size; hitboxArr[hitboxcount].x2 = x2 + size; hitboxArr[hitboxcount].x3 = x3 + size; hitboxArr[hitboxcount].x4 = x4 + size;
 		hitboxArr[hitboxcount].y1 = y1 + size; hitboxArr[hitboxcount].y2 = y2 + size; hitboxArr[hitboxcount].y3 = y3 + size; hitboxArr[hitboxcount].y4 = y4 + size;
 		hitboxArr[hitboxcount].name = name;
+		hitboxArr[hitboxcount].isSolid = isSolid;
 		hitboxcount++;
 	}
 	objCount++;
 	LoadImage(filename);
 }
 
-void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size) {
+void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, const char* name, bool hitbox, float size, bool isSolid) {
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
@@ -104,6 +105,7 @@ void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float 
 		hitboxArr[hitboxcount].x1 = x1 + size; hitboxArr[hitboxcount].x2 = x2 + size; hitboxArr[hitboxcount].x3 = x3 + size; hitboxArr[hitboxcount].x4 = x4 + size;
 		hitboxArr[hitboxcount].y1 = y1 + size; hitboxArr[hitboxcount].y2 = y2 + size; hitboxArr[hitboxcount].y3 = y3 + size; hitboxArr[hitboxcount].y4 = y4 + size;
 		hitboxArr[hitboxcount].name = name;
+		hitboxArr[hitboxcount].isSolid = isSolid;
 		hitboxcount++;
 	}
 	objectArr[objCount] = currentObject;
