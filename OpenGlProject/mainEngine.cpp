@@ -308,7 +308,8 @@ int main(int argc, char** argv) {
 	init();
 	glutDisplayFunc(display);
 	glutFullScreen();
-	LoadMenuScene();
+	//LoadMenuScene();
+	LoadMainScene();
 	timer(0);
 	glutMainLoop();
 	return 0;

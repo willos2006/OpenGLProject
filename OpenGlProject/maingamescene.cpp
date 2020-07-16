@@ -12,10 +12,6 @@ namespace maingamescene {
 	bool escapebackground = false;
 	bool escapebuttonover = false;
 	int turn = 0;
-	bool leftcol = false;
-	bool rightcol = false;
-	bool upcol = false;
-	bool downcol = false;
 
 	void MouseFunc(int button, int state, int xi, int yi) {
 		float x = ((float)xi / (float)pixelPerX) - 1.0f;
@@ -55,6 +51,9 @@ namespace maingamescene {
 				right = true;
 			}
 		}
+		if (key == 'p') {
+			printf("Player Positions: x1: %f, x2: %f, x3: %f, x4: %f \n                  y1: %f, y2: %f, y3: %f, y4: %f \n\n", hitboxArr[0].x1, hitboxArr[0].x2, hitboxArr[0].x3, hitboxArr[0].x4, hitboxArr[0].y1, hitboxArr[0].y2, hitboxArr[0].y3, hitboxArr[0].y4);
+		}
 		if (key == 27) {
 			if (escapebackground == false) {
 				LoadObjectFromMem("escapebackground", -1, 1, 1, -1, 1, 1, -1, -1, "escapebackground", false);
@@ -68,6 +67,154 @@ namespace maingamescene {
 				escapebackground = false;
 				glutPostRedisplay();
 			}
+		}
+	}
+
+	float xOffset = 0.01;
+	float yOffset = 0.01;
+
+	bool leftcol() {
+		int playerind;
+		int occ = 0;
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].name == "player") {
+				playerind = i;
+				break;
+			}
+		}
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
+				if ((hitboxArr[playerind].x1 <= hitboxArr[i].x2 && hitboxArr[playerind].x1 >= (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x2 && hitboxArr[playerind].x1 < (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x1 <= hitboxArr[i].x2 && hitboxArr[playerind].x1 >= (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x2 && hitboxArr[playerind].x1 < (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+			}
+		}
+		if (occ != 0) {
+			return true;
+			printf("%i", occ);
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool rightcol() {
+		int playerind;
+		int occ = 0;
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].name == "player") {
+				playerind = i;
+				break;
+			}
+		}
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
+				if (hitboxArr[playerind].x1 <= hitboxArr[i].x2 + xOffset && hitboxArr[playerind].x1 >= hitboxArr[i].x2 - xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 + yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 - yOffset) { //top of object
+					occ = 0;
+				}
+				else if ((hitboxArr[playerind].x2 <= (hitboxArr[i].x1 + xOffset) && hitboxArr[playerind].x2 >= hitboxArr[i].x1) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x2 > (hitboxArr[i].x1 + xOffset) && hitboxArr[playerind].x2 < hitboxArr[i].x1) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x2 <= (hitboxArr[i].x1 + xOffset) && hitboxArr[playerind].x2 >= hitboxArr[i].x1) && ((hitboxArr[playerind].y1 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3) || (hitboxArr[playerind].y3 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3))) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x2 > (hitboxArr[i].x1 + xOffset) && hitboxArr[playerind].x2 < hitboxArr[i].x1) && ((hitboxArr[playerind].y1 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3) || (hitboxArr[playerind].y3 > hitboxArr[i].y1 && hitboxArr[playerind].y3 < hitboxArr[i].y3))) {
+					occ++;
+				}
+			}
+		}
+		if (occ != 0) {
+			return true;
+			printf("%i", occ);
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool upcol() {
+		int playerind;
+		int occ = 0;
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].name == "player") {
+				playerind = i;
+				break;
+			}
+		}
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
+				if (hitboxArr[playerind].x2 >= hitboxArr[i].x4 - xOffset && hitboxArr[playerind].x2 <= hitboxArr[i].x4 + xOffset && hitboxArr[playerind].y1 >= hitboxArr[i].y3 - yOffset && hitboxArr[playerind].y1 <= hitboxArr[i].y3 + yOffset) {
+					occ = 0;
+				}
+				else if (hitboxArr[playerind].x1 >= hitboxArr[i].x3 - xOffset && hitboxArr[playerind].x1 <= hitboxArr[i].x3 + xOffset && hitboxArr[playerind].y1 >= hitboxArr[i].y3 - yOffset && hitboxArr[playerind].y1 <= hitboxArr[i].y3 + yOffset) {
+					occ = 0;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x1 && hitboxArr[playerind].x2 < hitboxArr[i].x2) && (hitboxArr[playerind].y1 < hitboxArr[i].y3 + yOffset && hitboxArr[playerind].y1 > hitboxArr[i].y3 - yOffset)) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x1 && hitboxArr[playerind].x1 < hitboxArr[i].x2) && (hitboxArr[playerind].y1 < hitboxArr[i].y3 + yOffset && hitboxArr[playerind].y1 > hitboxArr[i].y3 - yOffset)) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x2 > hitboxArr[i].x1 && hitboxArr[playerind].x2 < hitboxArr[i].x2) && (hitboxArr[playerind].y1 < hitboxArr[i].y3 + yOffset && hitboxArr[playerind].y1 > hitboxArr[i].y3 - yOffset)) {
+					occ++;
+				}
+			}
+		}
+		if (occ != 0) {
+			return true;
+			printf("%i", occ);
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool downcol() {
+		int playerind;
+		int occ = 0;
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].name == "player") {
+				playerind = i;
+				break;
+			}
+		}
+		for (int i = 0; i < hitboxcount; i++) {
+			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
+				if (hitboxArr[playerind].x2 >= hitboxArr[i].x4 - xOffset && hitboxArr[playerind].x2 <= hitboxArr[i].x4 + xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 - yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 + yOffset) {
+					occ = 0;
+				}
+				else if (hitboxArr[playerind].x1 >= hitboxArr[i].x3 - xOffset && hitboxArr[playerind].x1 <= hitboxArr[i].x3 + xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 - yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 + yOffset) {
+					occ = 0;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x1 && hitboxArr[playerind].x2 < hitboxArr[i].x2) && (hitboxArr[playerind].y3 < hitboxArr[i].y1 + yOffset && hitboxArr[playerind].y3 > hitboxArr[i].y1 - yOffset)) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x1 && hitboxArr[playerind].x1 < hitboxArr[i].x2) && (hitboxArr[playerind].y3 < hitboxArr[i].y1 + yOffset && hitboxArr[playerind].y3 > hitboxArr[i].y1 - yOffset)) {
+					occ++;
+				}
+				else if ((hitboxArr[playerind].x2 > hitboxArr[i].x1 && hitboxArr[playerind].x2 < hitboxArr[i].x2) && (hitboxArr[playerind].y3 < hitboxArr[i].y1 + yOffset && hitboxArr[playerind].y3 > hitboxArr[i].y1 - yOffset)) {
+					occ++;
+				}
+			}
+		}
+		if (occ != 0) {
+			return true;
+			printf("%i", occ);
+		}
+		else {
+			return false;
 		}
 	}
 
@@ -92,6 +239,9 @@ namespace maingamescene {
 			right = false;
 			objectArr[playerIndex].textureNo = GetTexIndex("player");
 			turn = 0;
+		}
+		if (key == 'c') {
+			printf("%d", leftcol());
 		}
 		glutPostRedisplay();
 	}
@@ -192,13 +342,6 @@ namespace maingamescene {
 		}
 	}
 
-	void NoCollisions() {
-		upcol = false;
-		downcol = false;
-		leftcol = false;
-		rightcol = false;
-	}
-
 	void MovePlayer(int) {
 		if (canmove) {
 			int playerIndex = GetObjIndexByName("player");
@@ -208,21 +351,7 @@ namespace maingamescene {
 					playerIndexHitbox = i;
 				}
 			}
-			if (left && objectArr[playerIndex].x1 > -1.0f && !leftcol) {
-				if (CheckIfCollideStop() && !upcol && !downcol) {
-					objectArr[playerIndex].x1 += 0.02;
-					objectArr[playerIndex].x2 += 0.02;
-					objectArr[playerIndex].x3 += 0.02;
-					objectArr[playerIndex].x4 += 0.02;
-					hitboxArr[playerIndexHitbox].x1 += 0.02;
-					hitboxArr[playerIndexHitbox].x2 += 0.02;
-					hitboxArr[playerIndexHitbox].x3 += 0.02;
-					hitboxArr[playerIndexHitbox].x4 += 0.02;
-					leftcol = true;
-				}
-				else {
-					rightcol = false;
-				}
+			if (left && objectArr[playerIndex].x1 > -1.0f && !leftcol()) {
 				objectArr[playerIndex].x1 -= 0.02;
 				objectArr[playerIndex].x2 -= 0.02;
 				objectArr[playerIndex].x3 -= 0.02;
@@ -232,21 +361,7 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].x3 -= 0.02;
 				hitboxArr[playerIndexHitbox].x4 -= 0.02;
 			}
-			if (right && objectArr[playerIndex].x2 < 1.0f && !rightcol) {
-				if (CheckIfCollideStop() && !upcol && !downcol) {
-					objectArr[playerIndex].x1 -= 0.02;
-					objectArr[playerIndex].x2 -= 0.02;
-					objectArr[playerIndex].x3 -= 0.02;
-					objectArr[playerIndex].x4 -= 0.02;
-					hitboxArr[playerIndexHitbox].x1 -= 0.02;
-					hitboxArr[playerIndexHitbox].x2 -= 0.02;
-					hitboxArr[playerIndexHitbox].x3 -= 0.02;
-					hitboxArr[playerIndexHitbox].x4 -= 0.02;
-					rightcol = true;
-				}
-				else {
-					leftcol = false;
-				}
+			if (right && objectArr[playerIndex].x2 < 1.0f && !rightcol()) {
 				objectArr[playerIndex].x1 += 0.02;
 				objectArr[playerIndex].x2 += 0.02;
 				objectArr[playerIndex].x3 += 0.02;
@@ -256,21 +371,7 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].x3 += 0.02;
 				hitboxArr[playerIndexHitbox].x4 += 0.02;
 			}
-			if (up && objectArr[playerIndex].y1 < 1.0f && !upcol) {
-				if (CheckIfCollideStop() && !leftcol && !rightcol) {
-					objectArr[playerIndex].y1 -= 0.02;
-					objectArr[playerIndex].y2 -= 0.02;
-					objectArr[playerIndex].y3 -= 0.02;
-					objectArr[playerIndex].y4 -= 0.02;
-					hitboxArr[playerIndexHitbox].y1 -= 0.02;
-					hitboxArr[playerIndexHitbox].y2 -= 0.02;
-					hitboxArr[playerIndexHitbox].y3 -= 0.02;
-					hitboxArr[playerIndexHitbox].y4 -= 0.02;
-					upcol = true;
-				}
-				else {
-					downcol = false;
-				}
+			if (up && objectArr[playerIndex].y1 < 1.0f && !upcol()) {
 				objectArr[playerIndex].y1 += 0.02;
 				objectArr[playerIndex].y2 += 0.02;
 				objectArr[playerIndex].y3 += 0.02;
@@ -280,22 +381,7 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].y3 += 0.02;
 				hitboxArr[playerIndexHitbox].y4 += 0.02;
 			}
-			if (down && objectArr[playerIndex].y3 > -1.0f && !downcol) {
-				if (CheckIfCollideStop() && !leftcol && !rightcol) {
-					printf("left: %i, right: %i", leftcol, rightcol);
-					objectArr[playerIndex].y1 += 0.02;
-					objectArr[playerIndex].y2 += 0.02;
-					objectArr[playerIndex].y3 += 0.02;
-					objectArr[playerIndex].y4 += 0.02;
-					hitboxArr[playerIndexHitbox].y1 += 0.02;
-					hitboxArr[playerIndexHitbox].y2 += 0.02;
-					hitboxArr[playerIndexHitbox].y3 += 0.02;
-					hitboxArr[playerIndexHitbox].y4 += 0.02;
-					downcol = true;
-				}
-				else {
-					upcol = false;
-				}
+			if (down && objectArr[playerIndex].y3 > -1.0f && !downcol()) {
 				objectArr[playerIndex].y1 -= 0.02;
 				objectArr[playerIndex].y2 -= 0.02;
 				objectArr[playerIndex].y3 -= 0.02;
@@ -304,9 +390,6 @@ namespace maingamescene {
 				hitboxArr[playerIndexHitbox].y2 -= 0.02;
 				hitboxArr[playerIndexHitbox].y3 -= 0.02;
 				hitboxArr[playerIndexHitbox].y4 -= 0.02;
-			}
-			if (!CheckIfCollideStop()) {
-				NoCollisions();
 			}
 		}
 		glutTimerFunc(20, MovePlayer, 0);
@@ -329,7 +412,7 @@ void LoadMainScene() {
 	LoadIntoMem("left2.png", "left2"); 
 	LoadIntoMem("right1.png", "right1"); 
 	LoadIntoMem("right2.png", "right2"); 
-	DeleteObject("loading", true);
+	//DeleteObject("loading", true);
 	CreateThread(NULL, 0, maingamescene::userInputHandler, NULL, 0, 0);
 	CreateThread(NULL, 0, maingamescene::anims, NULL, 0, 0);
 	maingamescene::MovePlayer(0);
