@@ -17,6 +17,8 @@ bool right;
 
 bool canmove = true;
 
+bool isLoadScreen = false;
+
 int pixelPerX = 1920 / 2;
 int pixelPerY = 1080 / 2;
 
@@ -305,11 +307,12 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(1920, 1080);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("This 'game' has no title yet! :)");
+	glutSetIconTitle("icon.ico");
 	init();
 	glutDisplayFunc(display);
 	glutFullScreen();
-	//LoadMenuScene();
-	LoadMainScene();
+	isLoadScreen = true;
+	LoadMenuScene();
 	timer(0);
 	glutMainLoop();
 	return 0;

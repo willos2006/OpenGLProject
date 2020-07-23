@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="funcs.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainEngine.cpp" />
@@ -177,6 +178,9 @@
     <Image Include="player1.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="glut.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

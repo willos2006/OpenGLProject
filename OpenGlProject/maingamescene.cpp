@@ -84,7 +84,13 @@ namespace maingamescene {
 		}
 		for (int i = 0; i < hitboxcount; i++) {
 			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
-				if ((hitboxArr[playerind].x1 <= hitboxArr[i].x2 && hitboxArr[playerind].x1 >= (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
+				if (hitboxArr[playerind].x1 <= hitboxArr[i].x2 + xOffset && hitboxArr[playerind].x1 >= hitboxArr[i].x2 - xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 - yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 + yOffset) { //top of object
+					occ = 0;
+				}
+				else if (hitboxArr[playerind].x1 <= hitboxArr[i].x2 + xOffset && hitboxArr[playerind].x1 >= hitboxArr[i].x2 - xOffset && hitboxArr[playerind].y1 >= hitboxArr[i].y3 - yOffset && hitboxArr[playerind].y1 <= hitboxArr[i].y3 + yOffset) { //top of object
+					occ = 0;
+				}
+				else if ((hitboxArr[playerind].x1 <= hitboxArr[i].x2 && hitboxArr[playerind].x1 >= (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
 					occ++;
 				}
 				else if ((hitboxArr[playerind].x1 > hitboxArr[i].x2 && hitboxArr[playerind].x1 < (hitboxArr[i].x2 - xOffset)) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
@@ -118,7 +124,10 @@ namespace maingamescene {
 		}
 		for (int i = 0; i < hitboxcount; i++) {
 			if (hitboxArr[i].isSolid && hitboxArr[i].name != "player") {
-				if (hitboxArr[playerind].x1 <= hitboxArr[i].x2 + xOffset && hitboxArr[playerind].x1 >= hitboxArr[i].x2 - xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 + yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 - yOffset) { //top of object
+				if (hitboxArr[playerind].x2 <= hitboxArr[i].x1 + xOffset && hitboxArr[playerind].x2 >= hitboxArr[i].x1 - xOffset && hitboxArr[playerind].y3 >= hitboxArr[i].y1 - yOffset && hitboxArr[playerind].y3 <= hitboxArr[i].y1 + yOffset) { //top of object
+					occ = 0;
+				}
+				else if (hitboxArr[playerind].x2 <= hitboxArr[i].x1 + xOffset && hitboxArr[playerind].x2 >= hitboxArr[i].x1 - xOffset && hitboxArr[playerind].y1 >= hitboxArr[i].y3 - yOffset && hitboxArr[playerind].y1 <= hitboxArr[i].y3 + yOffset) { //top of object
 					occ = 0;
 				}
 				else if ((hitboxArr[playerind].x2 <= (hitboxArr[i].x1 + xOffset) && hitboxArr[playerind].x2 >= hitboxArr[i].x1) && ((hitboxArr[playerind].y1 <= hitboxArr[i].y1 && hitboxArr[playerind].y1 >= hitboxArr[i].y3) || (hitboxArr[playerind].y3 <= hitboxArr[i].y1 && hitboxArr[playerind].y3 >= hitboxArr[i].y3))) {
@@ -412,7 +421,10 @@ void LoadMainScene() {
 	LoadIntoMem("left2.png", "left2"); 
 	LoadIntoMem("right1.png", "right1"); 
 	LoadIntoMem("right2.png", "right2"); 
-	//DeleteObject("loading", true);
+	if (isLoadScreen) {
+		DeleteObject("loading", true);
+		isLoadScreen = false;
+	}
 	CreateThread(NULL, 0, maingamescene::userInputHandler, NULL, 0, 0);
 	CreateThread(NULL, 0, maingamescene::anims, NULL, 0, 0);
 	maingamescene::MovePlayer(0);
