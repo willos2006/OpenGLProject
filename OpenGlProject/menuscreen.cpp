@@ -47,7 +47,7 @@ namespace menuscene {
 
 void LoadMenuScene() {
 	LoadIntoMem("loading.png", "loading");
-	LoadObjectAndTex("backgroundmenu.png", -1, 1, 1, -1, 1, 1, -1, -1, "background", false);
-	LoadObjectAndTex("startbtn.png", -0.725, -0.475, -0.475, -0.725, 0.15, 0.15, -0.15, -0.15, "button", false);
+	LoadObjectAndTex("backgroundmenu.png", -1, 1, 1, -1, 1, 1, -1, -1, "background", false, false);
+	LoadObjectAndTex("startbtn.png", -0.725, -0.475, -0.475, -0.725, 0.15, 0.15, -0.15, -0.15, "button", false, false);
 	menuscene::input = CreateThread(NULL, 0, menuscene::userInputHandler, NULL, 0, 0);
 }

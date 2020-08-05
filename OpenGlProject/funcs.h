@@ -6,6 +6,7 @@ extern struct Object {
 	float y1; float y2; float y3; float y4;
 	int textureNo;
 	const char* name;
+	bool isSolid;
 };
 
 extern struct HitBox {
@@ -14,6 +15,8 @@ extern struct HitBox {
 	const char* name;
 	bool isSolid;
 };
+extern int x;
+extern int y;
 extern struct HitBox hitboxArr[100];
 void ButtonBigger(int index, float amount);
 void ButtonSmaller(int index, float amount);

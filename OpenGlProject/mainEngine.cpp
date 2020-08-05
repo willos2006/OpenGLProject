@@ -24,6 +24,9 @@ int pixelPerY = 1080 / 2;
 
 int objCount = 0;
 
+int x = 1920;
+int y = 1080;
+
 GLuint textureArr[100];
 GLuint texture;
 GLuint escapetex;
@@ -81,6 +84,7 @@ void LoadObjectAndTex(const char* filename, float x1, float x2, float x3, float 
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
+	currentObject.isSolid = isSolid;
 	currentObject.textureNo = texcount;
 	objectArr[objCount] = currentObject;
 	if (hitbox) {
@@ -98,6 +102,7 @@ void LoadObjectFromMem(const char* texname, float x1, float x2, float x3, float 
 	currentObject.x1 = x1; currentObject.x2 = x2; currentObject.x3 = x3; currentObject.x4 = x4;
 	currentObject.y1 = y1; currentObject.y2 = y2; currentObject.y3 = y3; currentObject.y4 = y4;
 	currentObject.name = name;
+	currentObject.isSolid = isSolid;
 	for (int i = 0; i < comtexammount; i++) {
 		if (commontextureArr[i].name == texname) {
 			currentObject.textureNo = commontextureArr[i].texid;
@@ -304,13 +309,12 @@ void ClearForChange() {
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-	glutInitWindowSize(1920, 1080);
+	glutInitWindowSize(x, y);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("This 'game' has no title yet! :)");
-	glutSetIconTitle("icon.ico");
 	init();
-	glutDisplayFunc(display);
 	glutFullScreen();
+	glutDisplayFunc(display);
 	isLoadScreen = true;
 	LoadMenuScene();
 	timer(0);
